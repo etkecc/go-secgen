@@ -9,6 +9,7 @@ import (
 const charset = "abcdedfghijklmnopqrstABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789" // a-z A-Z 0-9
 var charsetlen = big.NewInt(57)
 
+// Password generates secure password
 func Password(length int) string {
 	var password strings.Builder
 
