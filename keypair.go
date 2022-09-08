@@ -2,6 +2,8 @@ package secgen
 
 import (
 	"crypto/ed25519"
+	"crypto/rand"
+	"crypto/rsa"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
@@ -10,6 +12,9 @@ import (
 	"github.com/mikesmitty/edkey"
 	"golang.org/x/crypto/ssh"
 )
+
+// RSABits used for DKIM keypair
+const RSABits = 3072
 
 // Keypair generates ed25519 keypair for ssh (public key, private key)
 func Keypair() (string, string, error) {
@@ -34,7 +39,11 @@ func Keypair() (string, string, error) {
 
 // DKIM generates DKIM signature and private key (TXT record, private key)
 func DKIM() (string, string, error) {
-	publicBytes, privateBytes, err := ed25519.GenerateKey(nil)
+	privateBytes, err := rsa.GenerateKey(rand.Reader, RSABits)
+	if err != nil {
+		return "", "", err
+	}
+	publicBytes, err := x509.MarshalPKIXPublicKey(privateBytes.Public())
 	if err != nil {
 		return "", "", err
 	}
@@ -51,7 +60,7 @@ func DKIM() (string, string, error) {
 	private := pem.EncodeToMemory(pemblock)
 	dkim := []string{
 		"v=DKIM1",
-		"k=ed25519",
+		"k=rsa",
 		"p=" + base64.StdEncoding.EncodeToString(publicBytes),
 	}
 
