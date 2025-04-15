@@ -1,10 +1,12 @@
 module github.com/etkecc/go-secgen
 
-go 1.19
+go 1.23.0
+
+toolchain go1.24.1
 
 require (
 	github.com/mikesmitty/edkey v0.0.0-20170222072505-3356ea4e686a
-	golang.org/x/crypto v0.31.0
+	golang.org/x/crypto v0.37.0
 )
 
-require golang.org/x/sys v0.28.0 // indirect
+require golang.org/x/sys v0.32.0 // indirect
